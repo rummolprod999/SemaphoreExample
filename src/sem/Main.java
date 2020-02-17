@@ -6,19 +6,23 @@ import java.util.concurrent.Semaphore;
 public class Main {
 
   private static ArrayList<String> pages =
-      new ArrayList<String>() {
-        {
-          add("1");
-        }
-      };
+          new ArrayList<String>() {
+            {
+              add("1");
+            }
+          };
 
   public static void main(String[] args) {
 
     Semaphore sem = new Semaphore(5);
     CommonResource res = new CommonResource();
+    ArrayList<Thread> threads = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
       Thread t = new Thread(new CountThread(res, sem, String.format("CountThread %d", i)));
       t.start();
+      threads.add(t);
+    }
+    for (Thread t : threads) {
       try {
         t.join();
       } catch (InterruptedException e) {
