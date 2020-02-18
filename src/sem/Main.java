@@ -3,6 +3,8 @@ package sem;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
+import static java.lang.System.out;
+
 public class Main {
 
   private static ArrayList<String> pages =
@@ -14,7 +16,7 @@ public class Main {
 
   public static void main(String[] args) {
 
-    Semaphore sem = new Semaphore(5);
+    Semaphore sem = new Semaphore(20);
     CommonResource res = new CommonResource();
     ArrayList<Thread> threads = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
@@ -52,18 +54,19 @@ class CountThread implements Runnable {
   public void run() {
 
     try {
-      System.out.println(name + " ожидает разрешение");
+      out.println(name + " ожидает разрешение");
       sem.acquire();
+      out.println(name + " захватывает разрешение");
       res.x = 1;
-      for (int i = 1; i < 3; i++) {
-        System.out.println(this.name + ": " + res.x);
+      for (int i = 1; i < 5; i++) {
+        out.println(this.name + ": " + res.x);
         res.x++;
-        Thread.sleep(1000);
+        Thread.sleep(5000);
       }
     } catch (InterruptedException e) {
-      System.out.println(e.getMessage());
+      out.println(e.getMessage());
     }
-    System.out.println(name + " освобождает разрешение");
+    out.println(name + " освобождает разрешение");
     sem.release();
   }
 }
